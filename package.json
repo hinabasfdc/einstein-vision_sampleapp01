@@ -1,0 +1,15 @@
+{
+  "name": "atelierhi-einsteinvision",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node.js"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "jsonwebtoken": "^7.4.1",
+    "node-static": "^0.7.9",
+    "request": "^2.81.0",
+    "socket.io": "^2.0.3"
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>Einstein Vision Demo App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/salesforce-lightning-design-system.min.css" />
+    <link rel="icon" type="image/png" href="/metamind.png">
+</head>
+
+<body>
+
+    <!-- view -->
+    <header class="slds-global-header slds-p-around_medium">
+        <h1 class="slds-text-heading_medium">Eintein Vision Demo App</h1>
+    </header>
+
+    <section>
+        <div class="slds-p-around_medium slds-text-align_center">
+            <img id="img_target" src="/assets/icons/utility/image_120.png" onclick="rotateImage()"></img>
+        </div>
+        <div class="slds-p-around_medium slds-text-align_center">
+            <input class="slds-file-selector__input slds-assistive-text" accept="image/png;image/jpeg" id="file-upload-input-01" aria-describedby="file-selector-id" type="file" onchange="drawImage()">
+            <label class="slds-file-selector__body" for="file-upload-input-01">
+              <span class="slds-file-selector__button slds-button slds-button_neutral">
+                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                  <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
+              </svg>Select Image File or Take Photo</span>
+              <span class="slds-file-selector__text slds-medium-show">or Drop Files</span>
+            </label>
+        </div>
+        <div class="slds-p-around_medium">
+            <h2 class="slds-text-heading_small">Model</h2>
+            <select id="model" class="slds-select" style="font-size: 16px;">
+            </select>
+        </div>
+        <div class="slds-p-around_medium slds-text-align_center">
+            <button class="slds-button slds-button_brand" onclick="getPredictions()">Predict</button>
+        </div>
+        <div class="slds-p-around_medium">
+            <h2 class="slds-text-heading_small">Results</h2>
+            <div id="results"></div>
+        </div>
+    </section>
+
+    <footer class="slds-p-around_medium slds-border_top">
+        <p>&copy;2017 Salesforce</p>
+    </footer>
+
+    <canvas id="cvs" style="display: none;"></canvas>
+
+    <!-- control -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var model = document.getElementById('model');
+        var results = document.getElementById('results');
+
+        /****
+         * カメラorファイルから画像を読み込み、サイズを縮小した上で表示
+         ****/
+        function drawImage() {
+
+            //読み込むファイルを取得&画像ファイルでなければファンクション終了
+            var file = document.getElementById('file-upload-input-01').files[0];
+            if (!file.type.match(/^image\/(png|jpeg|gif)$/)) return;
+
+            var image = new Image();
+            var reader = new FileReader();
+
+            //ファイル読み込み後のアクションを定義
+            reader.onload = function(evt) {
+
+                //画像読み込み後のアクションを定義
+                image.onload = function() {
+
+                    //HTML5 CANVASオブジェクトを取得
+                    var canvas = document.getElementById('cvs');
+                    var ctx = canvas.getContext('2d');
+
+                    //リサイズ後のサイズは縦横の大きい方を最大512pxになるように縦横比を計算しサイズを算出
+                    var targetWidth = 256;
+                    var targetHeight = 256;
+
+                    var w = image.width;
+                    var h = image.height;
+                    var ratio = 3/4;
+
+                    if (w > targetWidth || h > targetHeight) {
+                        if (w > h) {
+                            ratio = targetWidth / w;
+                            w = targetWidth;
+                            h = h * ratio;
+                        } else {
+                            ratio = targetHeight / h;
+                            h = targetHeight;
+                            w = w * ratio;
+                        }
+                    }
+
+                    //CANVASのサイズをリサイズ後のサイズに合わせた後に描画実行
+                    canvas.width = w;
+                    canvas.height = h;
+                    ctx.drawImage(image, 0, 0, w, h);
+
+                    //表示用のイメージオブジェクトに、リサイズした画像データを転記
+                    document.getElementById('img_target').src = canvas.toDataURL('image/jpeg');
+                }
+                //画像ファイルをimgオブジェクトのソースに指定
+                image.src = evt.target.result;
+            }
+            //ファイルを読み込み
+            reader.readAsDataURL(file);
+        }
+
+        function rotateImage() {
+
+        //CANVASオブジェクトを取得
+        var canvas = document.getElementById('cvs');
+        var ctx = canvas.getContext('2d');
+        var image = new Image();
+
+            image.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                canvas.width = image.height;
+                canvas.height = image.width;
+
+                ctx.rotate(90 * Math.PI / 180);
+                ctx.translate(0, -image.height);
+                ctx.drawImage(image, 0, 0);
+                ctx.restore();
+
+                document.getElementById('img_target').src = canvas.toDataURL('image/jpeg');
+        	}
+
+            image.src = document.getElementById('img_target').src;
+        }
+
+        function setModels(models) {
+            var buf = JSON.parse(models);
+            var select = document.getElementById('model');
+
+            while (select.childNodes.length > 0) {
+                select.removeChild(select.firstChild);
+            }
+
+            for (var i = 0; i < buf['models'].length; i++) {
+                var option = document.createElement("option");
+                option.text = buf['models'][i].label;
+                option.value = buf['models'][i].value;
+                select.appendChild(option);
+            }
+        }
+
+        function setResults(s) {
+            var buf = JSON.parse(s);
+            var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
+            o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
+            for (var i = 0; i < buf['probabilities'].length; i++) {
+                o += "<tr><td>" + buf['probabilities'][i]['label'] + "</td><td>" + buf['probabilities'][i]['probability'] + "</td>";
+            }
+            o += "</tbody></table>";
+            results.innerHTML = o;
+        }
+
+        function getPredictions() {
+            results.innerHTML =
+                '<div style="height: 6rem; position: relative;"><div role="status" class="slds-spinner slds-spinner_medium"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div></div></div>';
+
+            var canvas = document.getElementById('cvs');
+
+            socket.emit('getPredictions', {
+                modelId: model.value,
+                base64img: canvas.toDataURL('image/jpeg')
+            }, function(res) {
+                setResults(res);
+            });
+        }
+
+        var socket = io.connect('/');
+        socket.on('connect', function() {
+            socket.on("setResults", function(mess) {
+                setResults(mess);
+            });
+            socket.emit('getModels', setModels);
+        });
+    </script>
+</body>
+
+</html>
