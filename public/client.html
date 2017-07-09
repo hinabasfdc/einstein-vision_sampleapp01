@@ -116,25 +116,24 @@
 
         function rotateImage() {
 
-        //CANVASオブジェクトを取得
-        var canvas = document.getElementById('cvs');
-        var ctx = canvas.getContext('2d');
-        var image = new Image();
+            //CANVASオブジェクトを取得
+            var canvas = document.getElementById('cvs');
+            var ctx = canvas.getContext('2d');
+            var image = new Image();
 
-            image.onload = function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                image.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                canvas.width = image.height;
-                canvas.height = image.width;
+                    canvas.width = image.height;
+                    canvas.height = image.width;
 
-                ctx.rotate(90 * Math.PI / 180);
-                ctx.translate(0, -image.height);
-                ctx.drawImage(image, 0, 0);
-                ctx.restore();
+                    ctx.rotate(90 * Math.PI / 180);
+                    ctx.translate(0, -image.height);
+                    ctx.drawImage(image, 0, 0);
+                    ctx.restore();
 
-                document.getElementById('img_target').src = canvas.toDataURL('image/jpeg');
-        	}
-
+                    document.getElementById('img_target').src = canvas.toDataURL('image/jpeg');
+            	}
             image.src = document.getElementById('img_target').src;
         }
 
@@ -159,7 +158,7 @@
             var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
             o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
             for (var i = 0; i < buf['probabilities'].length; i++) {
-                o += "<tr><td>" + buf['probabilities'][i]['label'] + "</td><td>" + buf['probabilities'][i]['probability'] + "</td>";
+                o += '<tr><td class="slds-cell-wrap">' + buf['probabilities'][i]['label'] + '</td><td class="slds-cell-wrap">' + buf['probabilities'][i]['probability'] + "</td>";
             }
             o += "</tbody></table>";
             results.innerHTML = o;
