@@ -155,9 +155,12 @@
 
         function setResults(s) {
             var buf = JSON.parse(s);
+            var num = buf['probabilities'].length;
+            if (num > 10) {num = 10;}
+            
             var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
             o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
-            for (var i = 0; i < buf['probabilities'].length; i++) {
+            for (var i = 0; i < num; i++) {
                 o += '<tr><td class="slds-cell-wrap">' + buf['probabilities'][i]['label'] + '</td><td class="slds-cell-wrap">' + buf['probabilities'][i]['probability'] + "</td>";
             }
             o += "</tbody></table>";

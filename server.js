@@ -59,16 +59,6 @@ io.sockets.on('connection', function (socket) {
             var data = JSON.parse(body);
             console.log(data["access_token"]);
 
-            /*
-            var reqOptionsApiUsage = {
-                url: url + 'apiusage',
-                headers: {
-                  'Authorization': 'Bearer ' + data["access_token"],
-                  'Cache-Control': 'no-cache'
-                }
-            }
-            */
-
             var reqUrl = url + 'vision/predict';
             var formData = {
                 modelId: params.modelId,
@@ -90,31 +80,6 @@ io.sockets.on('connection', function (socket) {
                 cb(body);
             })
 
-/*
-                var reqUrl = url + 'language/intent';
-                if (params.modelId == "CommunitySentiment") {
-                    reqUrl = url + 'language/sentiment';
-                }
-
-                var formData = {
-                    modelId: params.modelId,
-                    document: text
-                }
-                var reqOptionsPrediction = {
-                    url: reqUrl,
-                    headers: {
-                        'Authorization': 'Bearer ' + data["access_token"],
-                        'Cache-Control': 'no-cache',
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    formData: formData
-                }
-
-                request.post(reqOptionsPrediction, function(error, response, body) {
-                    console.log(body);
-                    cb(body);
-                })
-*/
         });
 
     });
