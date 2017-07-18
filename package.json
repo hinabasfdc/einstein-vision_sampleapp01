@@ -1,9 +1,9 @@
 {
   "name": "atelierhi-einsteinvision",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node.js"
+    "start": "server.js"
   },
   "dependencies": {
     "dotenv": "^4.0.0",

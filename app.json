@@ -1,0 +1,24 @@
+{
+    "name": "Einstein Vision Sample App",
+    "keywords": [
+        "Image Classifier",
+        "Einstein"
+    ],
+    "repository": "https://github.com/hinabasfdc/einstein-vision_sampleapp01",
+    "addons": [
+      "einstein-vision",
+      {
+        "plan": "starter",
+      },
+    ],
+    "env": {
+      "CUSTOM_MODEL_ID": {
+        "description": "Classifier Models",
+        "value": '{"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"},{"label":"FoodImageClassifier","value":"FoodImageClassifier"},{"label":"SceneClassifier","value":"SceneClassifier"},{"label":"MultiLabelImageClassifier","value":"MultiLabelImageClassifier"}}'
+      },
+      "API_VERSION": {
+        "description": "Define API version",
+        "value": "2"
+      }
+    }
+}

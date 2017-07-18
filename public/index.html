@@ -11,7 +11,7 @@
 
 <body>
 
-    <!-- view -->
+    <!-- 画面描画定義エリア -->
     <header class="slds-global-header slds-p-around_medium">
         <h1 class="slds-text-heading_medium">Eintein Vision Demo App</h1>
     </header>
@@ -49,11 +49,16 @@
 
     <canvas id="cvs" style="display: none;"></canvas>
 
-    <!-- control -->
+    <!-- ロジック記述エリア -->
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var model = document.getElementById('model');
         var results = document.getElementById('results');
+
+        //画像の最大ピクセル数およびデフォルトの縦横比
+        var targetWidth = 1024;
+        var targetHeight = 1024;
+        var ratio = 3/4;
 
         /****
          * カメラorファイルから画像を読み込み、サイズを縮小した上で表示
@@ -64,6 +69,7 @@
             var file = document.getElementById('file-upload-input-01').files[0];
             if (!file.type.match(/^image\/(png|jpeg|gif)$/)) return;
 
+            //結果エリアの表示内容を空に
             results.innerHTML = '';
 
             var image = new Image();
@@ -73,19 +79,15 @@
             reader.onload = function(evt) {
 
                 //画像読み込み後のアクションを定義
+                //指定したサイズより大きければ、指定サイズになるようにリサイズする
                 image.onload = function() {
 
                     //HTML5 CANVASオブジェクトを取得
                     var canvas = document.getElementById('cvs');
                     var ctx = canvas.getContext('2d');
 
-                    //リサイズ後のサイズは縦横の大きい方を最大512pxになるように縦横比を計算しサイズを算出
-                    var targetWidth = 1024;
-                    var targetHeight = 1024;
-
                     var w = image.width;
                     var h = image.height;
-                    var ratio = 3/4;
 
                     if (w > targetWidth || h > targetHeight) {
                         if (w > h) {
@@ -114,6 +116,9 @@
             reader.readAsDataURL(file);
         }
 
+        /****
+         * 画像をクリック or タップしたら右に90度回転
+         ****/
         function rotateImage() {
 
             //CANVASオブジェクトを取得
@@ -137,6 +142,9 @@
             image.src = document.getElementById('img_target').src;
         }
 
+        /****
+         * モデルの選択リストを、サーバーから取得したJSONの値をもとに更新する
+         ****/
         function setModels(models) {
             var buf = JSON.parse(models);
             var select = document.getElementById('model');
@@ -153,11 +161,15 @@
             }
         }
 
+        /****
+         * 解析結果をテーブル形式で描画する
+         ****/
         function setResults(s) {
             var buf = JSON.parse(s);
             var num = buf['probabilities'].length;
+            //最大数を10までに限定
             if (num > 10) {num = 10;}
-            
+
             var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
             o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
             for (var i = 0; i < num; i++) {
@@ -167,6 +179,9 @@
             results.innerHTML = o;
         }
 
+        /****
+         * 画像をデータ化し、サーバー側のメソッドを呼び出す
+         ****/
         function getPredictions() {
             results.innerHTML =
                 '<div style="height: 6rem; position: relative;"><div role="status" class="slds-spinner slds-spinner_medium"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div></div></div>';
@@ -181,11 +196,16 @@
             });
         }
 
+        /****
+         * ソケット接続を有効にする
+         ****/
         var socket = io.connect('/');
         socket.on('connect', function() {
+            /*
             socket.on("setResults", function(mess) {
                 setResults(mess);
             });
+            */
             socket.emit('getModels', setModels);
         });
     </script>
