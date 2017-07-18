@@ -14,7 +14,7 @@
         "value": '{"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"},{"label":"FoodImageClassifier","value":"FoodImageClassifier"},{"label":"SceneClassifier","value":"SceneClassifier"},{"label":"MultiLabelImageClassifier","value":"MultiLabelImageClassifier"}]}'
       },
       "API_VERSION": {
-        "description": "Define API version",
+        "description": "Einstein Vision API Version",
         "value": "2"
       }
     }

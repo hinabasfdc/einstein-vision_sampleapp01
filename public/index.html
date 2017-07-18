@@ -2,7 +2,7 @@
 <html lang="ja">
 
 <head>
-    <title>Einstein Vision Demo App</title>
+    <title>Einstein Vision Sample App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="/assets/styles/salesforce-lightning-design-system.min.css" />
@@ -13,7 +13,7 @@
 
     <!-- 画面描画定義エリア -->
     <header class="slds-global-header slds-p-around_medium">
-        <h1 class="slds-text-heading_medium">Eintein Vision Demo App</h1>
+        <h1 class="slds-text-heading_medium">Eintein Vision Sample App</h1>
     </header>
 
     <section>
@@ -44,7 +44,7 @@
     </section>
 
     <footer class="slds-p-around_medium slds-border_top">
-        <p>&copy;2017 Salesforce</p>
+        <p>&copy;2017 Salesforce | <a href="https://github.com/hinabasfdc/einstein-vision_sampleapp01">Github Repository</a> | <a href="https://metamind.readme.io/v2">Einstein Vision Online Document</a></p>
     </footer>
 
     <canvas id="cvs" style="display: none;"></canvas>
@@ -183,9 +183,8 @@
          * 画像をデータ化し、サーバー側のメソッドを呼び出す
          ****/
         function getPredictions() {
-            results.innerHTML =
-                '<div style="height: 6rem; position: relative;"><div role="status" class="slds-spinner slds-spinner_medium"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div></div></div>';
-
+            //ツー心中であることを示すアニメーションを表示
+            results.innerHTML = '<div style="height: 6rem; position: relative;"><div role="status" class="slds-spinner slds-spinner_medium"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div></div></div>';
             var canvas = document.getElementById('cvs');
 
             socket.emit('getPredictions', {
@@ -197,15 +196,10 @@
         }
 
         /****
-         * ソケット接続を有効にする
+         * ソケット接続を有効にし、モデルの一覧を取得する
          ****/
         var socket = io.connect('/');
         socket.on('connect', function() {
-            /*
-            socket.on("setResults", function(mess) {
-                setResults(mess);
-            });
-            */
             socket.emit('getModels', setModels);
         });
     </script>
