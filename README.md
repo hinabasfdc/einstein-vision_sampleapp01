@@ -20,7 +20,7 @@ Einstein Vision を試用するために、GUIをNode.jsで実装したサンプ
 
 ## モデルの追加
 
-個別の予測・解析モデルを作成したら、CUSTOM_MODEL_IDの値を変更することで、選択肢に出現させ利用することができます。
+個別の予測・解析モデルを作成したら、CUSTOM_MODEL_IDの値を変更することで、選択肢に出現させ利用することができます。JSON形式なので、{"追加するモデルの表示名":"モデルID"}を追加します。
 
 ```追加の仕方
 {"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"},{"label":"FoodImageClassifier","value":"FoodImageClassifier"},{"label":"SceneClassifier","value":"SceneClassifier"},{"label":"MultiLabelImageClassifier","value":"MultiLabelImageClassifier"},{"選択リストの表示名":"モデルID"}]}
