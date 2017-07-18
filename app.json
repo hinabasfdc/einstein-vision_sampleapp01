@@ -11,7 +11,7 @@
     "env": {
       "CUSTOM_MODEL_ID": {
         "description": "Classifier Models",
-        "value": '{"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"},{"label":"FoodImageClassifier","value":"FoodImageClassifier"},{"label":"SceneClassifier","value":"SceneClassifier"},{"label":"MultiLabelImageClassifier","value":"MultiLabelImageClassifier"}}'
+        "value": '{"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"},{"label":"FoodImageClassifier","value":"FoodImageClassifier"},{"label":"SceneClassifier","value":"SceneClassifier"},{"label":"MultiLabelImageClassifier","value":"MultiLabelImageClassifier"}]}'
       },
       "API_VERSION": {
         "description": "Define API version",
