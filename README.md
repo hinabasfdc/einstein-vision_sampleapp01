@@ -2,8 +2,6 @@
 
 Einstein Vision を試用するために、GUIをNode.jsで実装したサンプルアプリです。Heroku Buttonでデプロイするだけで、デフォルトで用意されているモデルを使用した予測・解析を試してみることができます。
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
 ## 必要要件
 
  - Heroku アカウント (無償の範囲内で使えますが、Einstein Vision のアドオンを使用するため、クレジットカード情報の登録が必要です)
@@ -11,7 +9,7 @@ Einstein Vision を試用するために、GUIをNode.jsで実装したサンプ
 ## 実装方法
 
  - Heroku ボタンを使ってください。
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+ - [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## 特徴
 
