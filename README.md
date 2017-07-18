@@ -28,17 +28,17 @@ Einstein Vision を試用するために、GUIをNode.jsで実装したサンプ
 
 ## ローカルでの実行方法
 
-環境が揃って入ればローカルで実行して試すことも可能です。ただし、Einstein Vision へのアクセス情報は、Heroku 用の Einstein Vision アドオンを追加した際に付与されるため、いずれにせよ Heroku 上でのアプリケーション作成・アドオン追加が必要です。
+環境(Node.jsのランタイム)が揃っていればローカルで実行して試すことも可能です。ただし、Einstein Vision へのアクセス情報は、Heroku 用の Einstein Vision アドオンを追加した際に付与されるため、いずれにせよ Heroku 上でのアプリケーション作成・アドオン追加が必要です。
 
 1. nodeを実行できるようにします。
-2. ソースコードをダウンロードします。
-3. 依存関係のパッケージをダウンロードします。
+2. このソースコードをダウンロードします。(git cloneを使うと良いです)
+3. 依存関係のパッケージをダウンロードします。(package.jsonを見て必要なファイルがダウンロードされます)
 
 ```
 $ node install
 ```
 
-4. .envファイルを作成します。
+4. 環境変数設定の.envファイルを作成します。
 
 ```.env
 EINSTEIN_VISION_URL=[Heroku アプリケーションの Config Vars から値をコピーします]
@@ -47,7 +47,7 @@ CUSTOM_MODEL_ID='{"models":[{"label":"GeneralImageClassifier","value":"GeneralIm
 API_VERSION='v2'
 ```
 
-5. EINSTEIN_VISION_PRIVATE_KEYの値を Heroku アプリケーションの Config Vars からコピーし、ファイルeinstein_platform.keyを作成します。
+5. EINSTEIN_VISION_PRIVATE_KEYの値を Heroku アプリケーションの Config Variables からコピーし、ローカルに作成するファイル(ここではeinstein_platform.key)に書き込み保存します。
 
 ```einstein_platform.key
 -----BEGIN RSA PRIVATE KEY-----
@@ -56,7 +56,7 @@ MIIEo〜
 -----END RSA PRIVATE KEY-----
 ```
 
-6. EINSTEIN_VISION_PRIVATE_KEYを環境変数として定義します。(.envに書き込んでもうまくいかないので、この環境変数のみ個別にコマンドで定義しています)
+6. EINSTEIN_VISION_PRIVATE_KEYを環境変数として定義します。(.envに書き込んでもうまくいかないので、この環境変数のみ個別にコマンドで定義します)
 
 ```
 $ export EINSTEIN_VISION_PRIVATE_KEY=`cat einstein_platform.key`
