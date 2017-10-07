@@ -21,7 +21,7 @@ Einstein Vision を試用するために、GUIをNode.jsで実装したサンプ
 ## 使い方
 
 1. デプロイが完了したら、作成されたアプリケーションURLにブラウザでアクセスしてください。(heroku openコマンド、Open Appボタンなどでも良いです)
-2. 「Select Image File or Take Photo」ボタンをクリック or タップし、予測・解析したいファイルを選択する、もしくは、カメラが起動させて写真を撮影します。
+2. 「Select or Drop Image File / Take Photo」ボタンをクリック or タップし、予測・解析したいファイルを選択する、もしくは、カメラが起動させて写真を撮影します。もしくは画像領域へ画像ファイルをドラッグ&ドロップします。
 3. もし、カメラ撮影で画像の向きがおかしい場合は、画像をクリック or タップすることで、右に90度ずつ回転します。
 4. 予測・解析に使うモデルを選択します。
 5. 「Predict」ボタンをクリック or タップすると、予測・解析が実行され、結果が表示されます。
@@ -55,9 +55,9 @@ CUSTOM_MODEL_ID='{"models":[{"label":"GeneralImageClassifier","value":"GeneralIm
 API_VERSION='v2'
 ```
 
-5. EINSTEIN_VISION_PRIVATE_KEYの値を Heroku アプリケーションの Config Variables からコピーし、ローカルに作成するファイル(ここではeinstein_platform.key)に書き込み保存します。
+5. EINSTEIN_VISION_PRIVATE_KEYの値を Heroku アプリケーションの Config Variables からコピーし、ローカルに作成するファイル(ここではeinstein_platform.pem)に書き込み保存します。
 
-```einstein_platform.key
+```einstein_platform.pem
 -----BEGIN RSA PRIVATE KEY-----
 MIIEo〜
 中略
@@ -67,7 +67,7 @@ MIIEo〜
 6. EINSTEIN_VISION_PRIVATE_KEYを環境変数として定義します。(.envに書き込んでもうまくいかないので、この環境変数のみ個別にコマンドで定義します)
 
 ```
-$ export EINSTEIN_VISION_PRIVATE_KEY=`cat einstein_platform.key`
+$ export EINSTEIN_VISION_PRIVATE_KEY=`cat einstein_platform.pem`
 ```
 
 7. server.jsを実行します。
