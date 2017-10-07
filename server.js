@@ -96,7 +96,7 @@ io.sockets.on('connection', function (socket) {
         });
 
     });
-    
+
     //環境変数からモデルIDのJSONを取得し返す
     socket.on('getModels', function(cb) {
         cb(process.env.CUSTOM_MODEL_ID || '{"models":[{"label":"GeneralImageClassifier","value":"GeneralImageClassifier"}]}');

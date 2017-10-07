@@ -17,7 +17,7 @@
     </header>
 
     <section>
-        <div class="slds-p-around_medium slds-text-align_center">
+        <div class="slds-p-around_medium slds-text-align_center" ondrop="drop_handler(event)" ondragover="dragover_handler(event);">
             <img id="img_target" src="/assets/icons/utility/image_120.png" onclick="rotateImage()"></img>
         </div>
         <div class="slds-p-around_medium slds-text-align_center">
@@ -26,7 +26,7 @@
               <span class="slds-file-selector__button slds-button slds-button_neutral">
                 <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
                   <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#upload"></use>
-              </svg>Select Image File or Take Photo</span>
+              </svg>Select or Drop Image File / Take Photo</span>
             </label>
         </div>
         <div class="slds-p-around_medium">
@@ -61,12 +61,42 @@
         var ratio = 3/4;
 
         /****
+         * ファイルがドロップされた時の処理
+         ****/
+        function drop_handler(ev) {
+            ev.preventDefault();
+
+            var dt = ev.dataTransfer;
+            var file;
+            //itemsが存在する場合はitemsから、存在しない場合はfilesから実態を取得
+            if (dt.items) {
+                if (dt.items[0].kind == "file") {
+                    file = dt.items[0].getAsFile();
+                }
+            } else {
+                file = dt.files[i].getAsFile();
+            }
+
+            //画像描画ロジックにまわす
+            drawImage(file);
+        }
+
+        //ファイルがドラッグ中の処理
+        function dragover_handler(ev) {
+            ev.preventDefault();
+        }
+
+        /****
          * カメラorファイルから画像を読み込み、サイズを縮小した上で表示
          ****/
-        function drawImage() {
+        function drawImage(file) {
+
+            //fileがまだない場合(ドロップ処理から来た場合ではない)は本文のinputからファイルを取得
+            if (!file){
+              file = document.getElementById('file-upload-input-01').files[0];
+            }
 
             //読み込むファイルを取得&画像ファイルでなければファンクション終了
-            var file = document.getElementById('file-upload-input-01').files[0];
             if (!file.type.match(/^image\/(png|jpeg|gif)$/)) return;
 
             //結果エリアの表示内容を空に
@@ -166,24 +196,31 @@
          ****/
         function setResults(s) {
             var buf = JSON.parse(s);
-            var num = buf['probabilities'].length;
-            //最大数を10までに限定
-            if (num > 10) {num = 10;}
+            //console.log(buf);
 
-            var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
-            o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
-            for (var i = 0; i < num; i++) {
-                o += '<tr><td class="slds-cell-wrap">' + buf['probabilities'][i]['label'] + '</td><td class="slds-cell-wrap">' + buf['probabilities'][i]['probability'] + "</td>";
+            //識別結果がある場合はその内容を表示。ない場合はレスポンスを結果領域に表示
+            if(buf['probabilities']) {
+              var num = buf['probabilities'].length;
+              //最大数を10までに限定
+              if (num > 10) {num = 10;}
+
+              var o = '<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped slds-p-around_medium">';
+              o += '<thead><tr class="slds-text-title_caps"><th>Label</th><th>Probability</th></tr></thead><tbody>';
+              for (var i = 0; i < num; i++) {
+                  o += '<tr><td class="slds-cell-wrap">' + buf['probabilities'][i]['label'] + '</td><td class="slds-cell-wrap">' + buf['probabilities'][i]['probability'] + "</td>";
+              }
+              o += "</tbody></table>";
+              results.innerHTML = o;
+            }else{
+              results.innerHTML = JSON.stringify(s);
             }
-            o += "</tbody></table>";
-            results.innerHTML = o;
         }
 
         /****
          * 画像をデータ化し、サーバー側のメソッドを呼び出す
          ****/
         function getPredictions() {
-            //ツー心中であることを示すアニメーションを表示
+            //通信中であることを示すアニメーションを表示
             results.innerHTML = '<div style="height: 6rem; position: relative;"><div role="status" class="slds-spinner slds-spinner_medium"><span class="slds-assistive-text">Loading</span><div class="slds-spinner__dot-a"></div><div class="slds-spinner__dot-b"></div></div></div>';
             var canvas = document.getElementById('cvs');
 
