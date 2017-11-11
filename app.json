@@ -15,7 +15,7 @@
       },
       "API_VERSION": {
         "description": "Einstein Vision API Version",
-        "value": "2"
+        "value": "v2"
       }
     }
 }
