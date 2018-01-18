@@ -6,7 +6,9 @@
     ],
     "repository": "https://github.com/hinabasfdc/einstein-vision_sampleapp01",
     "addons": [
-      "einstein-vision:starter",
+      {
+        "plan": "einstein-vision:starter"
+      }
     ],
     "env": {
       "CUSTOM_MODEL_ID": {
